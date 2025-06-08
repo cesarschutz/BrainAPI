@@ -296,6 +296,10 @@
         }
 
         .process-step {
+            align-items: center;
+            display: flex;
+            flex-direction: column;
+
             background: var(--white);
             border-radius: 20px;
             padding: 2rem;
@@ -474,6 +478,114 @@
         }
         .styled-table a { color: var(--accent-teal); text-decoration: none; font-weight: 600; }
         .styled-table a:hover { text-decoration: underline; }
+
+        .icon-text {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            background: var(--accent-teal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+
+        .feature-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+            padding: 1.5rem;
+        }
+
+        .feature-icon {
+            background-color: var(--primary-light);
+            color: var(--primary-color);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1rem;
+        }
+        .feature-icon svg { width: 28px; height: 28px; }
+        .feature-title { font-weight: 600; font-size: 1.1rem; margin-bottom: 0.5rem; }
+        .feature-desc { font-size: 0.9rem; color: var(--sidebar-text); }
+
+        .tech-stack {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 3rem;
+        }
+        .tech-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            padding: 1.5rem;
+            border-radius: 10px;
+            text-align: center;
+        }
+        .tech-card img { height: 40px; margin-bottom: 1rem; }
+        .tech-card h4 { font-size: 1rem; margin-bottom: 0.25rem; }
+        .tech-card p { font-size: 0.85rem; color: var(--sidebar-text); }
+
+        /* Enhanced visual elements */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(13, 148, 136, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        /* Comparison cards */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .comparison-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 25px var(--shadow);
+            transition: all 0.4s ease;
+            border-left: 5px solid var(--secondary-blue);
+        }
+
+        .comparison-card.toolbox {
+            border-left-color: var(--accent-teal);
+        }
+
+        .comparison-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--shadow-lg);
+        }
+
+        .comparison-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .comparison-subtitle {
+            color: var(--gray-600);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
         
         /* Responsive */
         @media (max-width: 1024px) {
@@ -489,6 +601,7 @@
             .character { margin: 0 auto; }
             .nav-group { padding: 0.5rem; }
             .nav-btn { padding: 0.8rem 1rem; font-size: 0.85rem; }
+            .comparison-grid { grid-template-columns: 1fr; }
         }
         @media (max-width: 480px) {
             .nav-btn { width: calc(50% - 1rem); text-align: center; }
@@ -501,9 +614,7 @@
     <header class="header">
         <div class="container">
             <div class="header-content">
-                <svg class="logo" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 16.5c-2.49 0-4.5-2.01-4.5-4.5S8.51 9.5 11 9.5s4.5 2.01 4.5 4.5-2.01 4.5-4.5 4.5zm0-7C9.62 11.5 8.5 12.62 8.5 14s1.12 2.5 2.5 2.5 2.5-1.12 2.5-2.5-1.12-2.5-2.5-2.5zM12 4c.83 0 1.5.67 1.5 1.5S12.83 7 12 7s-1.5-.67-1.5-1.5S11.17 4 12 4zm0 13c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5zM7 12c-.83 0-1.5-.67-1.5-1.5S6.17 9 7 9s1.5.67 1.5 1.5S7.83 12 7 12zm10 0c-.83 0-1.5-.67-1.5-1.5s.67-1.5 1.5-1.5 1.5.67 1.5 1.5-.67 1.5-1.5 1.5z"/>
-                </svg>
+                <img src="Imagepng.png" alt="BrainAPI">
                 <h1>BrainAPI</h1>
                 <p>IA Conversacional para APIs - Guia Técnico Interativo</p>
             </div>
@@ -545,21 +656,48 @@
             </div>
 
             <div class="card card-with-character">
-                <svg class="character" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M19.48 12.32c-.59-.3-1.25-.49-1.98-.49h-.5c-.83 0-1.5.67-1.5 1.5s.67 1.5 1.5 1.5h.5c.73 0 1.39-.19 1.98-.49.98-.49 1.52-1.34 1.52-2.32s-.54-1.83-1.52-2.32zM4.52 12.32C3.54 12.81 3 13.66 3 14.64s.54 1.83 1.52 2.32c.59.3 1.25.49 1.98.49h.5c.83 0 1.5-.67 1.5-1.5S7.83 14.5 7 14.5h-.5c-.73 0-1.39.19-1.98.49zM12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
+                <img src="BrainAPI-character.png" alt="BrainAPI" class="logo">
                 <div>
+                    <img src="image-1.png" alt="BrainAPI">
                     <h3>Olá! Eu sou o BrainAPI 🧠</h3>
                     <p>Sou um assistente inteligente que vai te ensinar como criar sistemas de IA que conseguem "conversar" com APIs usando linguagem natural. Imagine poder dizer <strong>"Consulte meu saldo"</strong> e eu entender exatamente qual API chamar e como fazer isso!</p>
                     <p>Nesta jornada, você vai aprender conceitos fundamentais de forma técnica e prática.</p>
                 </div>
-            </div>
+            </div>           
 
             <div class="process-flow">
-                <div class="process-step"> <div class="step-number">1</div> <h3 class="step-title">Agents</h3> <p>Assistentes inteligentes que entendem linguagem natural</p> </div>
-                <div class="process-step"> <div class="step-number">2</div> <h3 class="step-title">MCP Protocol</h3> <p>Protocolo padrão para conectar LLMs a fontes de dados</p> </div>
-                <div class="process-step"> <div class="step-number">3</div> <h3 class="step-title">MCP toolbox</h3> <p>Servidor MCP prático e eficiente</p> </div>
-                <div class="process-step"> <div class="step-number">4</div> <h3 class="step-title">Google ADK</h3> <p>Framework para desenvolvimento de agentes de IA</p> </div>
-                <div class="process-step"> <div class="step-number">5</div> <h3 class="step-title">OpenAPI</h3> <p>Tradução automática de APIs em ferramentas</p> </div>
+                <div class="process-step"> 
+                    <div class="feature-icon">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+                    </div>
+                    <h4 class="feature-title">Interface Natural</h4>
+                    <p class="feature-desc">Converse com suas APIs usando linguagem humana, sem necessidade de conhecimento técnico sobre a implementação.</p> 
+                </div>
+                <div class="process-step"> 
+                    <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg></div>
+                    <h4 class="feature-title">Conversão Automática</h4>
+                    <p class="feature-desc">Transforma especificações OpenAPI em ferramentas de IA (MCP) de forma automática, economizando horas de trabalho.</p>
+                </div>
+                <div class="process-step">
+                    <div class="feature-icon"><svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2"></path><path d="M12 20v2"></path><path d="m4.93 4.93 1.41 1.41"></path><path d="m17.66 17.66 1.41 1.41"></path><path d="M2 12h2"></path><path d="M20 12h2"></path><path d="m6.34 17.66-1.41 1.41"></path><path d="m19.07 4.93-1.41 1.41"></path></svg></div>
+                    <h4 class="feature-title">IA Avançada</h4>
+                    <p class="feature-desc">Utiliza o poder do Google Gemini via ADK, com flexibilidade para integrar outros LLMs, inclusive modelos locais.</p>
+                </div>
             </div>
+
+            <div class="card">
+                    <h3>Ecossistema Tecnológico</h3>
+                    <div class="tech-stack">
+                        <div class="tech-card"><img src="https://www.openapis.org/wp-content/uploads/sites/31/2018/02/OpenAPI_Logo_Pantone-1.png" alt="OpenAPI"><h4>OpenAPI</h4><p>OpenAPI Specifications</p></div>
+                        <div class="tech-card"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/java/java-original.svg" alt="Java"><h4>Java 17+</h4><p>Linguagem principal</p></div>
+                        <div class="tech-card"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/spring/spring-original.svg" alt="Spring Boot"><h4>Spring Boot</h4><p>Framework Web</p></div>
+                        <div class="tech-card"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/google/google-original.svg" alt="Google ADK"><h4>Google ADK</h4><p>Framework de Agentes</p></div>
+                        <div class="tech-card"><img src="https://registry.npmmirror.com/@lobehub/icons-static-png/1.46.0/files/light/mcp.png" alt="MCP"><h4>MCP Protocol</h4><p>Comunicação com Tools</p></div>
+                        <div class="tech-card"><img src="https://raw.githubusercontent.com/googleapis/genai-toolbox/main/logo.png" alt="MCP Toolbox"><h4>MCP Toolbox</h4><p>Server MCP</p></div>
+                        <div class="tech-card"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/docker/docker-original.svg" alt="Docker"><h4>Docker</h4><p>Containerização</p></div>
+                        <div class="tech-card"><img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/nodejs/nodejs-original.svg" alt="Node.js"><h4>Node.js</h4><p>Para MCP Inspector</p></div>
+                    </div>
+                </div>
         </section>
 
         <!-- O que é um Agent -->
@@ -569,10 +707,26 @@
                 <p class="section-subtitle">Sistemas de IA que podem entender, raciocinar e agir</p>
             </div>
             <div class="card card-with-character">
-                <svg class="character" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 15c-1.66 0-3-1.34-3-3s1.34-3 3-3 3 1.34 3 3-1.34 3-3 3zM12 8c-2.21 0-4 1.79-4 4s1.79 4 4 4 4-1.79 4-4-1.79-4-4-4zm0 6c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z"/></svg>
+                <img src="BrainAPI-character.png" alt="BrainAPI" class="character">
                 <div>
                     <h3>Agent = Sistema Inteligente Autônomo</h3>
-                    <p>Um <span class="tooltip" data-tooltip="Sistema de IA que pode entender, raciocinar e agir autonomamente">Agent</span> é um sistema de IA que entende comandos, raciocina sobre qual ação tomar, executa tarefas usando ferramentas e responde de forma inteligente.</p>
+                    <p>Um <span class="tooltip" data-tooltip="Sistema de IA que pode entender, raciocinar e agir autonomamente">Agent</span> é um sistema de IA que:</p>
+                    <div class="icon-text">
+                        <div class="icon">👂</div>
+                        <span><strong>Entende</strong> comandos em linguagem natural</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🧠</div>
+                        <span><strong>Raciocina</strong> sobre qual ação tomar</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🔧</div>
+                        <span><strong>Executa</strong> tarefas usando ferramentas disponíveis</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">💬</div>
+                        <span><strong>Responde</strong> de forma contextual e inteligente</span>
+                    </div>
                 </div>
             </div>
             <div class="interactive-demo">
@@ -590,11 +744,67 @@
                 <p class="section-subtitle">O protocolo padrão para conectar LLMs a fontes de dados e ferramentas. <a href="https://docs.anthropic.com/en/docs/agents-and-tools/mcp" target="_blank" style="color: var(--accent-teal);">Saiba mais</a></p>
             </div>
              <div class="card card-with-character">
-                <svg class="character" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm-5 14H9v-2h6v2zm3-4H6v-2h12v2zm0-4H6V8h12v2z"/></svg>
+                <img src="https://registry.npmmirror.com/@lobehub/icons-static-png/1.46.0/files/light/mcp.png" alt="MCP" class="character">
+                
                 <div>
                     <h3>MCP = Protocolo Universal</h3>
-                    <p>O <span class="tooltip" data-tooltip="Protocolo aberto criado pela Anthropic para padronizar conexões de IA">Model Context Protocol</span> é um padrão aberto que padroniza como LLMs se conectam a dados externos, definindo uma arquitetura cliente-servidor segura e bidirecional.</p>
-                    <p>Pense no MCP como um "USB-C para IA", um conector universal que liga qualquer modelo a qualquer ferramenta.</p>
+                    <p>O <span class="tooltip" data-tooltip="Protocolo aberto criado pela Anthropic para padronizar conexões de IA">Model Context Protocol</span> é um padrão aberto que:</p>
+                    <div class="icon-text">
+                        <div class="icon">🔌</div>
+                        <span><strong>Padroniza</strong> como LLMs se conectam a dados externos</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🌐</div>
+                        <span><strong>Define</strong> arquitetura cliente-servidor</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🔄</div>
+                        <span><strong>Especifica</strong> como expor recursos, prompts e ferramentas</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🔒</div>
+                        <span><strong>Garante</strong> conexões seguras e bidirecionais</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🏗️ Arquitetura MCP:</h3>
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4 class="comparison-title">MCP Server</h4>
+                        <p class="comparison-subtitle">Expõe capacidades</p>
+                        <ul>
+                            <li><strong>Resources:</strong> Dados e conteúdo</li>
+                            <li><strong>Tools:</strong> Funções executáveis</li>
+                            <li><strong>Prompts:</strong> Templates interativos</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-card">
+                        <h4 class="comparison-title">MCP Client</h4>
+                        <p class="comparison-subtitle">Consome capacidades</p>
+                        <ul>
+                            <li><strong>LLM Applications:</strong> Claude, ChatGPT</li>
+                            <li><strong>AI Agents:</strong> Sistemas autônomos</li>
+                            <li><strong>Development Tools:</strong> IDEs, assistentes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔗 Analogia: MCP como USB-C</h3>
+                <p>Pense no USB-C: aquele conector universal que, num piscar de olhos, liga seu celular, notebook e periféricos sem frescura. O MCP faz o mesmo pelo mundo da IA — é o padrão que conecta qualquer modelo a toda fonte de dados e ferramenta que você imaginar, sem gambiarra nem dor de cabeça.</p>
+                <p>Consulte: <a href="https://hub.docker.com/u/mcp">Docker MCP HUB</a></p> 
+
+                <div class="code-block" data-lang="conceito">
+<span class="comment"># Antes do MCP: Cada IA tinha sua própria forma de conectar</span><br>
+<span class="keyword">Claude</span> → <span class="string">Formato A</span> → API<br>
+<span class="keyword">ChatGPT</span> → <span class="string">Formato B</span> → API<br>
+<span class="keyword">Gemini</span> → <span class="string">Formato C</span> → API<br><br>
+
+<span class="comment"># Com MCP: Padrão universal</span><br>
+<span class="keyword">Qualquer LLM</span> → <span class="string">MCP Protocol</span> → <span class="keyword">Qualquer Ferramenta</span>
                 </div>
             </div>
         </section>
@@ -606,11 +816,51 @@
                 <p class="section-subtitle">A implementação prática do servidor MCP. <a href="https://github.com/googleapis/genai-toolbox" target="_blank" style="color: var(--accent-teal);">Saiba mais</a></p>
             </div>
             <div class="card card-with-character">
-                <svg class="character" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M22.7 19l-9.1-9.1c.9-2.3.4-5-1.5-6.9-2-2-5-2.4-7.4-1.3L9 6l-4 4L.7 5.7c1.1-2.4.8-5.5-1.3-7.5C-1.8-1.9-5 .5-5 .5c.1 1 .5 1.9 1.1 2.8.5.8.9 1.2 1.4 1.7l-1.8 1.8L2 12l1.8-1.8c.4.5.9 1 1.7 1.4 1 .6 2 .9 2.8 1.1l-1.8 1.8L12 15l1.8-1.8c.5.4 1 .9 1.4 1.7.6.9 1 1.8 1.1 2.8l-1.8 1.8L15 21l6.3-4.3c1.1-2.4.8-5.5-1.3-7.5-1.9-1.9-4.6-2.4-6.9-1.5l-9.1-9.1L22.7 19z"/></svg>
-                 <div>
+                <img src="https://raw.githubusercontent.com/googleapis/genai-toolbox/main/logo.png" alt="BrainAPI" class="character">
+                <div>
                     <h3>MCP toolbox = Implementação Prática</h3>
-                    <p>O <span class="tooltip" data-tooltip="Implementação do protocolo MCP dentro do Google ADK">MCP toolbox</span> é a implementação do protocolo MCP no ADK, oferecendo auto-descoberta de ferramentas e gerenciamento de conexões.</p>
-                    <p>Enquanto o MCP é o <strong>protocolo</strong> (como o HTTP), o MCP toolbox é a <strong>implementação</strong> (como um servidor web Apache).</p>
+                    <p>O <span class="tooltip" data-tooltip="Implementação do protocolo MCP dentro do Google ADK">MCP toolbox</span> é a implementação do protocolo MCP no ADK:</p>
+                    <div class="icon-text">
+                        <div class="icon">🛠️</div>
+                        <span><strong>MCPToolset Class:</strong> Classe principal para integração</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🔄</div>
+                        <span><strong>Auto-discovery:</strong> Descobre ferramentas automaticamente</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🔌</div>
+                        <span><strong>Connection Management:</strong> Gerencia conexões stdio/SSE</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🎯</div>
+                        <span><strong>Tool Filtering:</strong> Filtra ferramentas específicas</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4 class="comparison-title">MCP (Protocolo)</h4>
+                    <p class="comparison-subtitle">O padrão universal</p>
+                    <ul>
+                        <li>Define <strong>como</strong> a comunicação deve acontecer</li>
+                        <li>Especifica formatos de mensagens</li>
+                        <li>Estabelece arquitetura cliente-servidor</li>
+                        <li>Criado pela Anthropic</li>
+                        <li><strong>Analogia:</strong> Como o protocolo HTTP</li>
+                    </ul>
+                </div>
+                <div class="comparison-card toolbox">
+                    <h4 class="comparison-title">MCP toolbox (Implementação)</h4>
+                    <p class="comparison-subtitle">A ferramenta prática</p>
+                    <ul>
+                        <li>Implementa o protocolo MCP <strong>dentro do ADK</strong></li>
+                        <li>Fornece classes e métodos prontos</li>
+                        <li>Facilita integração com agentes ADK</li>
+                        <li>Desenvolvido pelo Google</li>
+                        <li><strong>Analogia:</strong> Como um navegador web que usa HTTP</li>
+                    </ul>
                 </div>
             </div>
         </section>
@@ -619,29 +869,145 @@
         <section id="adk" class="section">
             <div class="section-header">
                 <h2 class="section-title">ADK - Agent Development Kit</h2>
-                <p class="section-subtitle">Framework do Google para desenvolvimento de agentes de IA.</p>
+                <p class="section-subtitle">Framework do Google para desenvolvimento de agentes de IA. <a href="https://google.github.io/adk-docs/" target="_blank" style="color: var(--accent-teal);">Saiba mais</a></p>
             </div>
             <div class="card card-with-character">
-                 <svg class="character" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M12 2L3 7v10l9 5 9-5V7l-9-5zm0 2.69L18.39 8 12 11.31 5.61 8 12 4.69zM5 15.46v-5.8l6 3.33v5.8L5 15.46zm14 0l-6 3.33v-5.8l6-3.33v5.8z"/></svg>
+                <img src="https://raw.githubusercontent.com/devicons/devicon/master/icons/google/google-original.svg" alt="BrainAPI" class="character">
                 <div>
                     <h3>ADK = Framework Completo</h3>
-                    <p>O <span class="tooltip" data-tooltip="Framework open-source do Google para desenvolvimento de agentes">Agent Development Kit</span> é um framework open-source que oferece uma estrutura completa para criar agentes, com um WebServer integrado e suporte nativo ao MCP.</p>
+                    <p>O <span class="tooltip" data-tooltip="Framework open-source do Google para desenvolvimento de agentes">Agent Development Kit</span> oferece:</p>
+                    <div class="icon-text">
+                        <div class="icon">🏗️</div>
+                        <span><strong>Framework:</strong> Estrutura completa para agentes</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🌐</div>
+                        <span><strong>WebServer:</strong> Interface web integrada</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🔗</div>
+                        <span><strong>Integração:</strong> Suporte nativo ao MCP</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">☕</div>
+                        <span><strong>Multi-linguagem:</strong> Python e Java</span>
+                    </div>
                 </div>
             </div>
+
+            <div class="highlight-box">
+                <h3>🏛️ Arquitetura ADK:</h3>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">🎯</div>
+                        <h4 class="step-title">Agent Core</h4>
+                        <p>Lógica principal de IA e processamento</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">🌐</div>
+                        <h4 class="step-title">WebServer</h4>
+                        <p>Interface web para interação</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">🔌</div>
+                        <h4 class="step-title">MCP Client</h4>
+                        <p>Conexão com ferramentas externas</p>
+                    </div>
+                </div>
+            </div>
+        
         </section>
         
         <!-- OpenAPI → Tools -->
         <section id="openapi" class="section">
             <div class="section-header">
                 <h2 class="section-title">OpenAPI → tools.json</h2>
-                <p class="section-subtitle">Conversão automática de especificações OpenAPI em ferramentas MCP</p>
+                <p class="section-subtitle">Conversão automática de especificações OpenAPI em ferramentas MCP </p>
             </div>
             <div class="card card-with-character">
-                 <svg class="character" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg"><path d="M15 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm-9-2V7H4v3H1v2h3v3h2v-3h3v-2H6zm9 4c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>
+                <img src="icontoolgenerator.png" alt="BrainAPI" class="character">
                 <div>
                     <h3>O Tradutor Automático</h3>
-                    <p>O projeto inclui uma ferramenta, `openapi-mcp-java`, que automatiza a conversão de arquivos de especificação OpenAPI (Swagger) em um arquivo `tools.json` compatível com o protocolo MCP. Isso elimina a necessidade de criar manualmente a definição de cada ferramenta.</p>
+                    <p>O <span class="tooltip" data-tooltip="Ferramenta que converte especificações OpenAPI em ferramentas MCP">openapi-mcp-java</span> automatiza a conversão:</p>
+                    <div class="icon-text">
+                        <div class="icon">📖</div>
+                        <span><strong>Lê</strong> arquivos OpenAPI/Swagger</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🔄</div>
+                        <span><strong>Converte</strong> cada endpoint em ferramenta</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">📝</div>
+                        <span><strong>Gera</strong> tools.json compatível com MCP</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">⚡</div>
+                        <span><strong>Automatiza</strong> todo o processo de integração</span>
+                    </div>
                 </div>
+            </div>
+
+            <div class="card">
+                <h3>⚙️ Processo de geração:</h3>
+                <div class="code-block" data-lang="bash">
+<span class="comment"># Compilar o gerador</span><br>
+<span class="keyword">cd</span> openapi-mcp-java
+<span class="keyword">mvn</span> clean package<br><br>
+
+<span class="comment"># Gerar ferramentas a partir do OpenAPI</span><br>
+<span class="keyword">java</span> -jar target/openapi-mcp-1.0-jar-with-dependencies.jar > tools.json
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🔄 Pipeline de transformação:</h3>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">📄</div>
+                        <h4 class="step-title">openapi.yaml</h4>
+                        <p>Especificação da API REST</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">🔧</div>
+                        <h4 class="step-title">openapi-mcp-java</h4>
+                        <p>Gerador de ferramentas</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">📦</div>
+                        <h4 class="step-title">tools.json</h4>
+                        <p>Ferramentas MCP prontas</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interactive-demo">
+                <h3>💡 Exemplo de conversão:</h3>
+                <div class="code-block" data-lang="yaml">
+<span class="comment"># OpenAPI Specification</span><br>
+<span class="keyword">paths:</span>
+  <span class="string">/cards/{uuid}</span><br>
+    <span class="keyword">get:</span><br>
+      <span class="keyword">&nbsp;&nbsp;summary:</span> <span class="string">"Get card by UUID"</span><br>
+      <span class="keyword">&nbsp;&nbsp;parameters:</span><br>
+          <span class="keyword">&nbsp;&nbsp;&nbsp;&nbsp;- name:</span> <span class="string">uuid</span><br>
+          <span class="keyword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;in:</span> <span class="string">path</span><br>
+          <span class="keyword">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;required:</span> <span class="string">true</span>
+                </div>
+                <p><strong>↓ Vira ferramenta MCP ↓</strong></p>
+                <div class="code-block" data-lang="json">
+{<br>
+  <span class="string">&nbsp;&nbsp;"name"</span>: <span class="string">"get-card-by-uuid"</span>,<br>
+  <span class="string">&nbsp;&nbsp;"description"</span>: <span class="string">"Get card by UUID"</span>,<br>
+  <span class="string">&nbsp;&nbsp;"inputSchema"</span>: {<br>
+    <span class="string">&nbsp;&nbsp;&nbsp;&nbsp;"type"</span>: <span class="string">"object"</span>,<br>
+    <span class="string">&nbsp;&nbsp;&nbsp;&nbsp;"properties"</span>: {<br>
+      <span class="string">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"uuid"</span>: { <br><span class="string">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;"type"</span>: <span class="string">"string"</span> <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}<br>
+    &nbsp;&nbsp;&nbsp;&nbsp;}<br>
+  &nbsp;&nbsp;}<br>
+}
+                </div>
+                <p><strong>Agent entende:</strong> "Consulte o cartão abc123" → <code>get-card-by-uuid(uuid: "abc123")</code></p>
             </div>
         </section>
 
@@ -650,7 +1016,7 @@
             <div class="section-header">
                 <h2 class="section-title">BrainAPI em Ação</h2>
                 <p class="section-subtitle">Integrando todos os componentes em um sistema completo</p>
-                <img src="https://placehold.co/800x400/1e3a8a/ffffff?text=Arquitetura+BrainAPI" alt="Diagrama da Arquitetura BrainAPI" style="width:100%; max-width: 800px; border-radius: 15px; margin-top: 2rem;">
+                <img src="Imagepng.png" alt="BrainAPI">
             </div>
             <div class="interactive-demo">
                 <h3>🎯 Simulação do BrainAPI:</h3>

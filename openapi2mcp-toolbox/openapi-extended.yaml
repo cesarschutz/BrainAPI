@@ -1,0 +1,52 @@
+openapi: 3.0.0
+info:
+  title: "Card API Avan\xE7ada"
+  version: '2.0'
+servers:
+- url: http://localhost:3000
+paths:
+  /cards:
+    get:
+      summary: "Lista cart\xF5es com filtros"
+      operationId: listCards
+      parameters:
+      - in: query
+        name: status
+        required: false
+        schema:
+          type: string
+      - in: header
+        name: X-Auth-Token
+        required: true
+        schema:
+          type: string
+      responses:
+        '200':
+          description: "Cart\xF5es encontrados"
+    post:
+      summary: "Cria um novo cart\xE3o"
+      operationId: createCard
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                holderName:
+                  type: string
+                limit:
+                  type: number
+                type:
+                  type: string
+              required:
+              - holderName
+              - limit
+              - type
+            example:
+              holderName: Cesar Schutz
+              limit: 5000
+              type: CREDIT
+      responses:
+        '201':
+          description: "Cart\xE3o criado com sucesso"

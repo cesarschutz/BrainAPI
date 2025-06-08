@@ -1,0 +1,1373 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BrainAPI - IA Conversacional para APIs</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --primary-blue: #1e3a8a;
+            --secondary-blue: #3b82f6;
+            --accent-teal: #0d9488;
+            --light-teal: #5eead4;
+            --gold: #f59e0b;
+            --white: #ffffff;
+            --gray-50: #f9fafb;
+            --gray-100: #f3f4f6;
+            --gray-600: #4b5563;
+            --gray-800: #1f2937;
+            --shadow: rgba(0, 0, 0, 0.1);
+            --shadow-lg: rgba(0, 0, 0, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: var(--gray-800);
+            background: linear-gradient(135deg, var(--gray-50) 0%, var(--white) 100%);
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--primary-blue) 0%, var(--secondary-blue) 50%, var(--accent-teal) 100%);
+            color: var(--white);
+            padding: 3rem 0;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><circle cx="50" cy="50" r="1.5" fill="rgba(255,255,255,0.1)"/></svg>') repeat;
+            animation: float 25s infinite linear;
+        }
+
+        @keyframes float {
+            0% { transform: translateX(-50px) translateY(-50px) rotate(0deg); }
+            100% { transform: translateX(50px) translateY(50px) rotate(360deg); }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        .logo {
+            width: 140px;
+            height: auto;
+            margin-bottom: 1.5rem;
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.3));
+            animation: pulse 3s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 8px rgba(0,0,0,0.3);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .header p {
+            font-size: 1.3rem;
+            opacity: 0.95;
+            font-weight: 300;
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--white);
+            box-shadow: 0 4px 20px var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+        }
+
+        .nav-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            padding: 1.2rem 0;
+            gap: 0.5rem;
+        }
+
+        .nav-btn {
+            background: linear-gradient(135deg, var(--secondary-blue) 0%, var(--accent-teal) 100%);
+            color: var(--white);
+            border: none;
+            padding: 1rem 1.8rem;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .nav-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .nav-btn:hover::before {
+            left: 100%;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .nav-btn.active {
+            background: linear-gradient(135deg, var(--gold) 0%, #f97316 100%);
+            box-shadow: 0 4px 15px rgba(245, 158, 11, 0.4);
+        }
+
+        /* Sections */
+        .section {
+            display: none;
+            padding: 4rem 0;
+            min-height: 80vh;
+            animation: fadeInUp 0.8s ease-out;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        @keyframes fadeInUp {
+            from { 
+                opacity: 0; 
+                transform: translateY(30px);
+            }
+            to { 
+                opacity: 1; 
+                transform: translateY(0);
+            }
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 4rem;
+        }
+
+        .section-title {
+            font-size: 3rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            position: relative;
+            font-weight: 700;
+            letter-spacing: -0.02em;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 120px;
+            height: 5px;
+            background: linear-gradient(90deg, var(--secondary-blue), var(--accent-teal), var(--gold));
+            border-radius: 3px;
+        }
+
+        .section-subtitle {
+            font-size: 1.3rem;
+            color: var(--gray-600);
+            max-width: 700px;
+            margin: 0 auto;
+            font-weight: 300;
+        }
+
+        /* Cards */
+        .card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin: 2.5rem 0;
+            box-shadow: 0 10px 30px var(--shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            border: 1px solid var(--gray-100);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: linear-gradient(90deg, var(--secondary-blue), var(--accent-teal));
+        }
+
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px var(--shadow-lg);
+        }
+
+        .card-with-character {
+            display: grid;
+            grid-template-columns: 180px 1fr;
+            gap: 2.5rem;
+            align-items: center;
+        }
+
+        .character {
+            width: 160px;
+            height: auto;
+            animation: float-gentle 4s ease-in-out infinite;
+        }
+
+        @keyframes float-gentle {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(2deg); }
+        }
+
+        /* Code blocks */
+        .code-block {
+            background: linear-gradient(135deg, #1e293b 0%, #334155 100%);
+            color: #e2e8f0;
+            padding: 2rem;
+            border-radius: 15px;
+            margin: 1.5rem 0;
+            overflow-x: auto;
+            position: relative;
+            font-family: 'JetBrains Mono', 'Fira Code', monospace;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+        }
+
+        .code-block::before {
+            content: attr(data-lang);
+            position: absolute;
+            top: 1rem;
+            right: 1.5rem;
+            background: var(--accent-teal);
+            color: var(--white);
+            padding: 0.3rem 0.8rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .code-line {
+            display: block;
+            padding: 0.3rem 0;
+        }
+
+        .comment { color: #94a3b8; }
+        .keyword { color: #f472b6; }
+        .string { color: #fbbf24; }
+
+        /* Process flow */
+        .process-flow {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .process-step {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            text-align: center;
+            box-shadow: 0 8px 25px var(--shadow);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            border-top: 5px solid var(--secondary-blue);
+        }
+
+        .process-step:hover {
+            transform: translateY(-8px);
+            border-top-color: var(--gold);
+            box-shadow: 0 15px 35px var(--shadow-lg);
+        }
+
+        .step-number {
+            background: linear-gradient(135deg, var(--secondary-blue), var(--accent-teal));
+            color: var(--white);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            margin: 0 auto 1.5rem;
+            font-size: 1.3rem;
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .step-title {
+            font-size: 1.4rem;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        /* Interactive elements */
+        .interactive-demo {
+            background: linear-gradient(135deg, var(--gray-50), var(--white));
+            border-radius: 20px;
+            padding: 2.5rem;
+            margin: 2.5rem 0;
+            border: 2px dashed var(--accent-teal);
+            position: relative;
+        }
+
+        .demo-input {
+            width: 100%;
+            padding: 1.2rem;
+            border: 2px solid var(--gray-100);
+            border-radius: 12px;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .demo-input:focus {
+            outline: none;
+            border-color: var(--accent-teal);
+            box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.1);
+        }
+
+        .demo-btn {
+            background: linear-gradient(135deg, var(--secondary-blue), var(--accent-teal));
+            color: var(--white);
+            border: none;
+            padding: 1.2rem 2.5rem;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .demo-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.4);
+        }
+
+        .demo-output {
+            background: var(--primary-blue);
+            color: var(--white);
+            padding: 1.5rem;
+            border-radius: 12px;
+            margin-top: 1.5rem;
+            font-family: 'JetBrains Mono', monospace;
+            min-height: 80px;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(30, 58, 138, 0.3);
+        }
+
+        /* Comparison cards */
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .comparison-card {
+            background: var(--white);
+            border-radius: 20px;
+            padding: 2.5rem;
+            box-shadow: 0 8px 25px var(--shadow);
+            transition: all 0.4s ease;
+            border-left: 5px solid var(--secondary-blue);
+        }
+
+        .comparison-card.toolbox {
+            border-left-color: var(--accent-teal);
+        }
+
+        .comparison-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px var(--shadow-lg);
+        }
+
+        .comparison-title {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 1rem;
+        }
+
+        .comparison-subtitle {
+            color: var(--gray-600);
+            margin-bottom: 1.5rem;
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 { font-size: 2.5rem; }
+            .section-title { font-size: 2.2rem; }
+            .card-with-character {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .character { margin: 0 auto; }
+            .nav-container { padding: 1rem 0; }
+            .nav-btn { padding: 0.8rem 1.2rem; font-size: 0.85rem; }
+            .comparison-grid { grid-template-columns: 1fr; }
+        }
+
+        /* Tooltip */
+        .tooltip {
+            position: relative;
+            cursor: help;
+            color: var(--accent-teal);
+            font-weight: 600;
+            border-bottom: 1px dotted var(--accent-teal);
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--primary-blue);
+            color: var(--white);
+            padding: 0.8rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Enhanced visual elements */
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(13, 148, 136, 0.1));
+            border: 1px solid rgba(59, 130, 246, 0.2);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+        }
+
+        .icon-text {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            margin: 1rem 0;
+        }
+
+        .icon {
+            width: 24px;
+            height: 24px;
+            background: var(--accent-teal);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--white);
+            font-weight: bold;
+            font-size: 0.8rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <img src="BrainAPI-character.png" alt="BrainAPI" class="logo">
+                <h1>BrainAPI</h1>
+                <p>IA Conversacional para APIs - Guia Técnico Interativo</p>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="container">
+            <div class="nav-container">
+                <button class="nav-btn active" onclick="showSection('intro')">Introdução</button>
+                <button class="nav-btn" onclick="showSection('agent')">O que é um Agent?</button>
+                <button class="nav-btn" onclick="showSection('mcp')">MCP Protocol</button>
+                <button class="nav-btn" onclick="showSection('mcp-toolbox')">MCP toolbox</button>
+                <button class="nav-btn" onclick="showSection('adk')">ADK</button>
+                <button class="nav-btn" onclick="showSection('openapi')">OpenAPI → Tools</button>
+                <button class="nav-btn" onclick="showSection('projeto')">BrainAPI em Ação</button>
+                <button class="nav-btn" onclick="showSection('execucao')">Como Executar</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Introdução -->
+        <section id="intro" class="section active">
+            <div class="section-header">
+                <img src="image-1.png" alt="BrainAPI">
+                <h2 class="section-title">Bem-vindos ao BrainAPI!</h2>
+                <p class="section-subtitle">Aprenda como criar sistemas de IA que conversam com APIs usando linguagem natural</p>
+            </div>
+
+            <div class="card card-with-character">
+                <img src="BrainAPI-character.png" alt="BrainAPI" class="character">
+                <div>
+                    <h3>Olá! Eu sou o BrainAPI 🧠</h3>
+                    <p>Sou um assistente inteligente que vai te ensinar como criar sistemas de IA que conseguem "conversar" com APIs usando linguagem natural. Imagine poder dizer <strong>"Consulte meu saldo"</strong> e eu entender exatamente qual API chamar e como fazer isso!</p>
+                    <p>Nesta jornada, você vai aprender conceitos fundamentais de forma técnica e prática.</p>
+                </div>
+            </div>
+
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h3 class="step-title">Agents</h3>
+                    <p>Assistentes inteligentes que entendem linguagem natural e executam ações</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h3 class="step-title">MCP Protocol</h3>
+                    <p>Protocolo padrão para conectar LLMs a fontes de dados</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h3 class="step-title">MCP toolbox</h3>
+                    <p>Servidor MCP</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h3 class="step-title">Google ADK</h3>
+                    <p>Framework do Google para desenvolvimento de agentes de IA
+
+</p>
+                </div>
+                <div class="process-step">
+                    <div class="step-number">5</div>
+                    <h3 class="step-title">OpenAPI</h3>
+                    <p>Tradução automática de APIs em ferramentas</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- O que é um Agent -->
+        <section id="agent" class="section">
+            <div class="section-header">
+                <h2 class="section-title">O que é um Agent?</h2>
+                <p class="section-subtitle">Sistemas de IA que podem entender, raciocinar e agir</p>
+            </div>
+
+            <div class="card card-with-character">
+                <img src="BrainAPI-character.png" alt="BrainAPI" class="character">
+                <div>
+                    <h3>Agent = Sistema Inteligente Autônomo</h3>
+                    <p>Um <span class="tooltip" data-tooltip="Sistema de IA que pode entender, raciocinar e agir autonomamente">Agent</span> é um sistema de IA que:</p>
+                    <div class="icon-text">
+                        <div class="₢đʋ">👂</div>
+                        <span><strong>Entende</strong> comandos em linguagem natural</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🧠</div>
+                        <span><strong>Raciocina</strong> sobre qual ação tomar</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🔧</div>
+                        <span><strong>Executa</strong> tarefas usando ferramentas disponíveis</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">💬</div>
+                        <span><strong>Responde</strong> de forma contextual e inteligente</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interactive-demo">
+                <h3>🎯 Experimente um Agent em ação:</h3>
+                <input type="text" class="demo-input" id="agentInput" placeholder="Digite algo como: 'Consulte o cartão com UUID abc123'">
+                <button class="demo-btn" onclick="simulateAgent()">Enviar para o Agent</button>
+                <div class="demo-output" id="agentOutput">Aguardando comando...</div>
+            </div>
+
+            <div class="card">
+                <h3>🔄 Arquitetura de um Agent:</h3>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">📥</div>
+                        <h4 class="step-title">Input</h4>
+                        <p>Recebe comandos em linguagem natural</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">🤖</div>
+                        <h4 class="step-title">LLM</h4>
+                        <p>Processa e entende a intenção</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">⚙️</div>
+                        <h4 class="step-title">Tools</h4>
+                        <p>Executa ações usando ferramentas</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">📤</div>
+                        <h4 class="step-title">Output</h4>
+                        <p>Retorna resultado estruturado</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- MCP Protocol -->
+        <section id="mcp" class="section">
+            <div class="section-header">
+                <h2 class="section-title">MCP - Model Context Protocol</h2>
+                <p class="section-subtitle">O protocolo padrão para conectar LLMs a fontes de dados e ferramentas</p><br>
+                <a href="https://docs.anthropic.com/en/docs/agents-and-tools/mcp" target="_blank" style="color: var(--accent-teal);">Saiba mais clicando aqui</a>
+            </div>
+
+            <div class="card card-with-character">
+                <img src="BrainAPI-character.png" alt="BrainAPI" class="character">
+                <div>
+                    <h3>MCP = Protocolo Universal</h3>
+                    <p>O <span class="tooltip" data-tooltip="Protocolo aberto criado pela Anthropic para padronizar conexões de IA">Model Context Protocol</span> é um padrão aberto que:</p>
+                    <div class="icon-text">
+                        <div class="icon">🔌</div>
+                        <span><strong>Padroniza</strong> como LLMs se conectam a dados externos</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🌐</div>
+                        <span><strong>Define</strong> arquitetura cliente-servidor</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🔄</div>
+                        <span><strong>Especifica</strong> como expor recursos, prompts e ferramentas</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🔒</div>
+                        <span><strong>Garante</strong> conexões seguras e bidirecionais</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🏗️ Arquitetura MCP:</h3>
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4 class="comparison-title">MCP Server</h4>
+                        <p class="comparison-subtitle">Expõe capacidades</p>
+                        <ul>
+                            <li><strong>Resources:</strong> Dados e conteúdo</li>
+                            <li><strong>Tools:</strong> Funções executáveis</li>
+                            <li><strong>Prompts:</strong> Templates interativos</li>
+                        </ul>
+                    </div>
+                    <div class="comparison-card">
+                        <h4 class="comparison-title">MCP Client</h4>
+                        <p class="comparison-subtitle">Consome capacidades</p>
+                        <ul>
+                            <li><strong>LLM Applications:</strong> Claude, ChatGPT</li>
+                            <li><strong>AI Agents:</strong> Sistemas autônomos</li>
+                            <li><strong>Development Tools:</strong> IDEs, assistentes</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔗 Analogia: MCP como USB-C</h3>
+                <p>Pense no USB-C: aquele conector universal que, num piscar de olhos, liga seu celular, notebook e periféricos sem frescura. O MCP faz o mesmo pelo mundo da IA — é o padrão que conecta qualquer modelo a toda fonte de dados e ferramenta que você imaginar, sem gambiarra nem dor de cabeça.</p>
+                <p>Consulte: <a href="https://hub.docker.com/u/mcp">Docker MCP HUB</a></p> 
+
+                <div class="code-block" data-lang="conceito">
+<span class="comment"># Antes do MCP: Cada IA tinha sua própria forma de conectar</span><br>
+<span class="keyword">Claude</span> → <span class="string">Formato A</span> → API<br>
+<span class="keyword">ChatGPT</span> → <span class="string">Formato B</span> → API<br>
+<span class="keyword">Gemini</span> → <span class="string">Formato C</span> → API<br><br>
+
+<span class="comment"># Com MCP: Padrão universal</span><br>
+<span class="keyword">Qualquer LLM</span> → <span class="string">MCP Protocol</span> → <span class="keyword">Qualquer Ferramenta</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- MCP toolbox -->
+        <section id="mcp-toolbox" class="section">
+            <div class="section-header">
+                <h2 class="section-title">MCP toolbox</h2>
+                <p class="section-subtitle">Servidor de MCP</p><br>
+                <a href="https://github.com/googleapis/genai-toolbox" target="_blank" style="color: var(--accent-teal);">Saiba mais clicando aqui</a>
+            </div>
+
+            <div class="card card-with-character">
+                <img src="BrainAPI-character.png" alt="BrainAPI" class="character">
+                <div>
+                    <h3>MCP toolbox = Implementação Prática</h3>
+                    <p>O <span class="tooltip" data-tooltip="Implementação do protocolo MCP dentro do Google ADK">MCP toolbox</span> é a implementação do protocolo MCP no ADK:</p>
+                    <div class="icon-text">
+                        <div class="icon">🛠️</div>
+                        <span><strong>MCPToolset Class:</strong> Classe principal para integração</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🔄</div>
+                        <span><strong>Auto-discovery:</strong> Descobre ferramentas automaticamente</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🔌</div>
+                        <span><strong>Connection Management:</strong> Gerencia conexões stdio/SSE</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🎯</div>
+                        <span><strong>Tool Filtering:</strong> Filtra ferramentas específicas</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="comparison-grid">
+                <div class="comparison-card">
+                    <h4 class="comparison-title">MCP (Protocolo)</h4>
+                    <p class="comparison-subtitle">O padrão universal</p>
+                    <ul>
+                        <li>Define <strong>como</strong> a comunicação deve acontecer</li>
+                        <li>Especifica formatos de mensagens</li>
+                        <li>Estabelece arquitetura cliente-servidor</li>
+                        <li>Criado pela Anthropic</li>
+                        <li><strong>Analogia:</strong> Como o protocolo HTTP</li>
+                    </ul>
+                </div>
+                <div class="comparison-card toolbox">
+                    <h4 class="comparison-title">MCP toolbox (Implementação)</h4>
+                    <p class="comparison-subtitle">A ferramenta prática</p>
+                    <ul>
+                        <li>Implementa o protocolo MCP <strong>dentro do ADK</strong></li>
+                        <li>Fornece classes e métodos prontos</li>
+                        <li>Facilita integração com agentes ADK</li>
+                        <li>Desenvolvido pelo Google</li>
+                        <li><strong>Analogia:</strong> Como um navegador web que usa HTTP</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>⚙️ Como usar o MCP toolbox:</h3>
+                <div class="code-block" data-lang="python">
+<span class="comment"># Importar a classe MCPToolset</span>
+<span class="keyword">from</span> google.adk.tools.mcp_tool.mcp_toolset <br><span class="keyword">import</span> MCPToolset
+
+<span class="comment"># Criar agente com ferramentas MCP</span><br>
+root_agent = LlmAgent(
+    model=<span class="string">'gemini-2.0-flash'</span>,
+    name=<span class="string">'mcp_agent'</span>,
+    tools=[
+        MCPToolset(
+            connection_params=StdioServerParameters(
+                command=<span class="string">'npx'</span>,
+                args=[<span class="string">'-y'</span>, <span class="string">'@modelcontextprotocol/server-filesystem'</span>]
+            )
+        )
+    ]
+)
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🔄 Fluxo de funcionamento:</h3>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <h4 class="step-title">Conexão</h4>
+                        <p>MCPToolset conecta ao servidor MCP</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <h4 class="step-title">Descoberta</h4>
+                        <p>Lista ferramentas disponíveis</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <h4 class="step-title">Adaptação</h4>
+                        <p>Converte para formato ADK</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <h4 class="step-title">Proxy</h4>
+                        <p>Encaminha chamadas do agente</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ADK -->
+        <section id="adk" class="section">
+            <div class="section-header">
+                <h2 class="section-title">ADK - Agent Development Kit</h2>
+                <p class="section-subtitle">Framework do Google para desenvolvimento de agentes de IA</p>
+            </div>
+
+            <div class="card card-with-character">
+                <img src="BrainAPI-character.png" alt="BrainAPI" class="character">
+                <div>
+                    <h3>ADK = Framework Completo</h3>
+                    <p>O <span class="tooltip" data-tooltip="Framework open-source do Google para desenvolvimento de agentes">Agent Development Kit</span> oferece:</p>
+                    <div class="icon-text">
+                        <div class="icon">🏗️</div>
+                        <span><strong>Framework:</strong> Estrutura completa para agentes</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🌐</div>
+                        <span><strong>WebServer:</strong> Interface web integrada</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🔗</div>
+                        <span><strong>Integração:</strong> Suporte nativo ao MCP</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">☕</div>
+                        <span><strong>Multi-linguagem:</strong> Python e Java</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🚀 Executando com ADK WebServer:</h3>
+                <div class="code-block" data-lang="bash">
+<span class="comment"># Configurar API Key do Google AI Studio</span>
+<span class="keyword">export</span> <span class="string">GOOGLE_API_KEY=sua-chave-aqui</span>
+
+<span class="comment"># Executar agente com interface web (Java)</span>
+<span class="keyword">mvn</span> compile exec:java <span class="string">"-Dexec.args=--server.port=8080 \
+     --adk.agents.source-dir=src/ \
+     --logging.level.com.google.adk.dev=DEBUG"</span>
+
+<span class="comment"># Ou com Python</span>
+<span class="keyword">adk</span> web --port 8080
+                </div>
+                <p style="margin-top: 1rem;">Acesse <strong>http://localhost:8080</strong> para interagir com seu agente!</p>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🏛️ Arquitetura ADK:</h3>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">🎯</div>
+                        <h4 class="step-title">Agent Core</h4>
+                        <p>Lógica principal de IA e processamento</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">🌐</div>
+                        <h4 class="step-title">WebServer</h4>
+                        <p>Interface web para interação</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">🔌</div>
+                        <h4 class="step-title">MCP Client</h4>
+                        <p>Conexão com ferramentas externas</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">☁️</div>
+                        <h4 class="step-title">Deploy</h4>
+                        <p>Implantação em produção</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- OpenAPI → Tools -->
+        <section id="openapi" class="section">
+            <div class="section-header">
+                <h2 class="section-title">OpenAPI → tools.json</h2>
+                <p class="section-subtitle">Conversão automática de especificações OpenAPI em ferramentas MCP</p>
+            </div>
+
+            <div class="card card-with-character">
+                <img src="BrainAPI-character.png" alt="BrainAPI" class="character">
+                <div>
+                    <h3>O Tradutor Automático</h3>
+                    <p>O <span class="tooltip" data-tooltip="Ferramenta que converte especificações OpenAPI em ferramentas MCP">openapi-mcp-java</span> automatiza a conversão:</p>
+                    <div class="icon-text">
+                        <div class="icon">📖</div>
+                        <span><strong>Lê</strong> arquivos OpenAPI/Swagger</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">🔄</div>
+                        <span><strong>Converte</strong> cada endpoint em ferramenta</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">📝</div>
+                        <span><strong>Gera</strong> tools.json compatível com MCP</span>
+                    </div>
+                    <div class="icon-text">
+                        <div class="icon">⚡</div>
+                        <span><strong>Automatiza</strong> todo o processo de integração</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>⚙️ Processo de geração:</h3>
+                <div class="code-block" data-lang="bash">
+<span class="comment"># Compilar o gerador</span>
+<span class="keyword">cd</span> openapi-mcp-java
+<span class="keyword">mvn</span> clean package
+
+<span class="comment"># Gerar ferramentas a partir do OpenAPI</span>
+<span class="keyword">java</span> -jar target/openapi-mcp-1.0-jar-with-dependencies.jar > tools.json
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🔄 Pipeline de transformação:</h3>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">📄</div>
+                        <h4 class="step-title">openapi.yaml</h4>
+                        <p>Especificação da API REST</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">🔧</div>
+                        <h4 class="step-title">openapi-mcp-java</h4>
+                        <p>Gerador de ferramentas</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">📦</div>
+                        <h4 class="step-title">tools.json</h4>
+                        <p>Ferramentas MCP prontas</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">🤖</div>
+                        <h4 class="step-title">Agent</h4>
+                        <p>IA usando as ferramentas</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interactive-demo">
+                <h3>💡 Exemplo de conversão:</h3>
+                <div class="code-block" data-lang="yaml">
+<span class="comment"># OpenAPI Specification</span>
+<span class="keyword">paths:</span>
+  <span class="string">/cards/{uuid}:</span>
+    <span class="keyword">get:</span>
+      <span class="keyword">summary:</span> <span class="string">"Get card by UUID"</span>
+      <span class="keyword">parameters:</span>
+        - <span class="keyword">name:</span> <span class="string">uuid</span>
+          <span class="keyword">in:</span> <span class="string">path</span>
+          <span class="keyword">required:</span> <span class="string">true</span>
+                </div>
+                <p><strong>↓ Vira ferramenta MCP ↓</strong></p>
+                <div class="code-block" data-lang="json">
+{
+  <span class="string">"name"</span>: <span class="string">"get-card-by-uuid"</span>,
+  <span class="string">"description"</span>: <span class="string">"Get card by UUID"</span>,
+  <span class="string">"inputSchema"</span>: {
+    <span class="string">"type"</span>: <span class="string">"object"</span>,
+    <span class="string">"properties"</span>: {
+      <span class="string">"uuid"</span>: { <span class="string">"type"</span>: <span class="string">"string"</span> }
+    }
+  }
+}
+                </div>
+                <p><strong>Agent entende:</strong> "Consulte o cartão abc123" → <code>get-card-by-uuid(uuid: "abc123")</code></p>
+            </div>
+        </section>
+
+        <!-- BrainAPI em Ação -->
+        <section id="projeto" class="section">
+            <div class="section-header">
+                <h2 class="section-title">BrainAPI em Ação</h2>
+                <p class="section-subtitle">Integrando todos os componentes em um sistema completo</p>
+                <img src="image.png" alt="BrainAPI">
+            </div>
+
+            <div class="card card-with-character">
+                <img src="BrainAPI-character.png" alt="BrainAPI" class="character">
+                <div>
+                    <h3>A Orquestra Completa 🎼</h3>
+                    <p>Agora vamos ver como todos os componentes se integram para criar uma experiência completa de IA conversacional com APIs!</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔄 Arquitetura completa do BrainAPI:</h3>
+                <div class="process-flow">
+                    <div class="process-step">
+                        <div class="step-number">1</div>
+                        <h4 class="step-title">OpenAPI → Tools</h4>
+                        <p>Gera tools.json das APIs REST</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">2</div>
+                        <h4 class="step-title">MCP Server</h4>
+                        <p>Hospeda ferramentas via protocolo MCP</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">3</div>
+                        <h4 class="step-title">ADK Agent</h4>
+                        <p>Processa linguagem natural usando MCP toolbox</p>
+                    </div>
+                    <div class="process-step">
+                        <div class="step-number">4</div>
+                        <h4 class="step-title">Resposta</h4>
+                        <p>Resultado estruturado para o usuário</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="interactive-demo">
+                <h3>🎯 Simulação do BrainAPI:</h3>
+                <input type="text" class="demo-input" id="BrainAPIInput" placeholder="Experimente: 'Qual o status do meu cartão?' ou 'Consulte a fatura de dezembro'">
+                <button class="demo-btn" onclick="simulateBrainAPI()">Perguntar ao BrainAPI</button>
+                <div class="demo-output" id="BrainAPIOutput">Pronto para responder suas perguntas sobre cartões!</div>
+            </div>
+
+            <div class="card">
+                <h3>🏗️ Estrutura do projeto:</h3>
+                <div class="code-block" data-lang="text">
+BrainAPI/
+├── openapi-mcp-java/            <span class="comment"># Gerador de tools.json</span>
+│   ├── src/main/java/           <span class="comment"># Código fonte Java</span>
+│   ├── pom.xml                  <span class="comment"># Dependências Maven</span>
+│   └── target/                  <span class="comment"># JAR compilado</span>
+├── tools.json                   <span class="comment"># Ferramentas MCP geradas</span>
+├── BrainAPI-agent/             <span class="comment"># Agent ADK + WebServer</span>
+│   ├── src/                     <span class="comment"># Código do agente</span>
+│   ├── pom.xml                  <span class="comment"># Configuração ADK</span>
+│   └── application.properties   <span class="comment"># Configurações</span>
+└── docs/                        <span class="comment"># Documentação</span>
+                </div>
+            </div>
+
+            <div class="highlight-box">
+                <h3>🔗 Fluxo de dados completo:</h3>
+                <p><strong>Usuário:</strong> "Consulte o cartão com UUID abc123"</p>
+                <p><strong>↓</strong></p>
+                <p><strong>ADK Agent:</strong> Processa linguagem natural</p>
+                <p><strong>↓</strong></p>
+                <p><strong>MCP toolbox:</strong> Identifica ferramenta get-card-by-uuid</p>
+                <p><strong>↓</strong></p>
+                <p><strong>MCP Server:</strong> Executa chamada HTTP para API</p>
+                <p><strong>↓</strong></p>
+                <p><strong>API REST:</strong> Retorna dados do cartão</p>
+                <p><strong>↓</strong></p>
+                <p><strong>Agent:</strong> Formata resposta em linguagem natural</p>
+                <p><strong>↓</strong></p>
+                <p><strong>Usuário:</strong> "Cartão ativo, limite R$ 5.000, disponível R$ 3.750"</p>
+            </div>
+        </section>
+
+        <!-- Como Executar -->
+        <section id="execucao" class="section">
+            <div class="section-header">
+                <h2 class="section-title">Mãos à Obra!</h2>
+                <p class="section-subtitle">Guia passo a passo para executar o BrainAPI</p>
+                <img src="image.png" alt="BrainAPI">
+            </div>
+
+            <div class="card card-with-character">
+                <img src="BrainAPI-character.png" alt="BrainAPI" class="character">
+                <div>
+                    <h3>Vamos colocar tudo para funcionar! 🚀</h3>
+                    <p>Siga estes passos e em poucos minutos você terá seu próprio BrainAPI rodando com IA conversacional!</p>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>📋 Pré-requisitos:</h3>
+                <div class="icon-text">
+                    <div class="icon">☕</div>
+                    <span>Java 17+ instalado</span>
+                </div>
+                <div class="icon-text">
+                    <div class="icon">🐳</div>
+                    <span>Docker instalado e rodando</span>
+                </div>
+                <div class="icon-text">
+                    <div class="icon">📦</div>
+                    <span>Node.js (para MCP inspector)</span>
+                </div>
+                <div class="icon-text">
+                    <div class="icon">🔑</div>
+                    <span>Google AI Studio API Key</span>
+                </div>
+            </div>
+
+            <div class="process-flow">
+                <div class="process-step">
+                    <div class="step-number">1</div>
+                    <h4 class="step-title">Gerar Tools</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="keyword">cd</span> openapi-mcp-java
+<span class="keyword">mvn</span> clean package
+<span class="keyword">java</span> -jar target/openapi-mcp-1.0-jar-with-dependencies.jar > ../tools.json
+                    </div>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">2</div>
+                    <h4 class="step-title">Subir MCP Server</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="keyword">export</span> <span class="string">VERSION=0.6.0</span>
+<span class="keyword">docker pull</span> us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:$VERSION
+<span class="keyword">docker run</span> -p 8080:8080 -v $(pwd)/tools.json:/tools.json \
+  us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:$VERSION \
+  --tools-file=/tools.json
+                    </div>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">3</div>
+                    <h4 class="step-title">Testar com Inspector</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="keyword">npx</span> @modelcontextprotocol/inspector
+<span class="comment"># Abrir http://127.0.0.1:6274</span>
+<span class="comment"># Conectar em http://127.0.0.1:8080/mcp/sse</span>
+                    </div>
+                </div>
+
+                <div class="process-step">
+                    <div class="step-number">4</div>
+                    <h4 class="step-title">Executar Agent</h4>
+                    <div class="code-block" data-lang="bash">
+<span class="keyword">export</span> <span class="string">GOOGLE_API_KEY=sua-chave</span>
+<span class="keyword">cd</span> BrainAPI-agent
+<span class="keyword">mvn</span> compile exec:java <span class="string">"-Dexec.args=--server.port=8080"</span>
+<span class="comment"># Abrir http://localhost:8080</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🎉 Resultado final:</h3>
+                <div class="icon-text">
+                    <div class="icon">💬</div>
+                    <span>Conversar com o BrainAPI em linguagem natural</span>
+                </div>
+                <div class="icon-text">
+                    <div class="icon">🔍</div>
+                    <span>Consultar informações de cartões automaticamente</span>
+                </div>
+                <div class="icon-text">
+                    <div class="icon">📊</div>
+                    <span>Acessar dados via APIs de forma transparente</span>
+                </div>
+                <div class="icon-text">
+                    <div class="icon">🚀</div>
+                    <span>Expandir com novas APIs e funcionalidades</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <h3>🔗 Recursos técnicos:</h3>
+                <ul style="margin: 1rem 0; padding-left: 2rem;">
+                    <li><a href="https://docs.anthropic.com/en/docs/agents-and-tools/mcp" target="_blank" style="color: var(--accent-teal);">📖 MCP Protocol Documentation</a></li>
+                    <li><a href="https://google.github.io/adk-docs/tools/mcp-tools/" target="_blank" style="color: var(--accent-teal);">🛠️ MCP toolbox (Google ADK)</a></li>
+                    <li><a href="https://google.github.io/adk-docs/" target="_blank" style="color: var(--accent-teal);">🤖 Google ADK Documentation</a></li>
+                    <li><a href="https://www.openapis.org/" target="_blank" style="color: var(--accent-teal);">📜 OpenAPI Specification</a></li>
+                </ul>
+            </div>
+        </section>
+    </main>
+
+    <script>
+        // Navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+
+            // Remove active class from all nav buttons
+            const navBtns = document.querySelectorAll('.nav-btn');
+            navBtns.forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+
+            // Add active class to clicked button
+            event.target.classList.add('active');
+
+            // Smooth scroll to top
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Agent simulation
+        function simulateAgent() {
+            const input = document.getElementById('agentInput').value;
+            const output = document.getElementById('agentOutput');
+            
+            if (!input.trim()) {
+                output.textContent = 'Por favor, digite um comando!';
+                return;
+            }
+
+            output.textContent = 'Processando...';
+            
+            setTimeout(() => {
+                if (input.toLowerCase().includes('cartão') || input.toLowerCase().includes('card')) {
+                    output.innerHTML = `
+🤖 <strong>Agent processou:</strong><br>
+📝 Comando: "${input}"<br>
+🔧 Ferramenta: get-card-by-uuid<br>
+✅ Resultado: Cartão encontrado - Status: Ativo, Limite: R$ 5.000
+                    `;
+                } else if (input.toLowerCase().includes('saldo')) {
+                    output.innerHTML = `
+🤖 <strong>Agent processou:</strong><br>
+📝 Comando: "${input}"<br>
+🔧 Ferramenta: get-balance<br>
+✅ Resultado: Saldo atual: R$ 1.250,00
+                    `;
+                } else {
+                    output.innerHTML = `
+🤖 <strong>Agent processou:</strong><br>
+📝 Comando: "${input}"<br>
+🔧 Analisando qual ferramenta usar...<br>
+✅ Comando executado com sucesso!
+                    `;
+                }
+            }, 1500);
+        }
+
+        // BrainAPI simulation
+        function simulateBrainAPI() {
+            const input = document.getElementById('BrainAPIInput').value;
+            const output = document.getElementById('BrainAPIOutput');
+            
+            if (!input.trim()) {
+                output.textContent = 'Faça uma pergunta sobre cartões!';
+                return;
+            }
+
+            output.textContent = '🧠 BrainAPI processando...';
+            
+            setTimeout(() => {
+                if (input.toLowerCase().includes('status')) {
+                    output.innerHTML = `
+🧠 <strong>BrainAPI:</strong> Consultei seu cartão!<br>
+📊 Status: Ativo | Limite: R$ 5.000 | Disponível: R$ 3.750<br>
+🔒 Sem bloqueios | Última transação: Hoje às 14:30
+                    `;
+                } else if (input.toLowerCase().includes('fatura')) {
+                    output.innerHTML = `
+🧠 <strong>BrainAPI:</strong> Aqui está sua fatura!<br>
+📅 Dezembro 2024: R$ 1.250,00<br>
+📆 Vencimento: 15/01/2025 | Status: Em aberto
+                    `;
+                } else if (input.toLowerCase().includes('limite')) {
+                    output.innerHTML = `
+🧠 <strong>BrainAPI:</strong> Informações do seu limite:<br>
+💳 Limite total: R$ 5.000,00<br>
+✅ Disponível: R$ 3.750,00 | Usado: R$ 1.250,00
+                    `;
+                } else {
+                    output.innerHTML = `
+🧠 <strong>BrainAPI:</strong> Entendi sua pergunta "${input}"<br>
+🔧 Executando a ação apropriada...<br>
+✅ Processado com sucesso! Como posso ajudar mais?
+                    `;
+                }
+            }, 2000);
+        }
+
+        // Enhanced interactions
+        document.addEventListener('DOMContentLoaded', function() {
+            // Add hover effects to cards
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(card => {
+                card.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-8px)';
+                });
+                
+                card.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0)';
+                });
+            });
+
+            // Enhanced input focus effects
+            const inputs = document.querySelectorAll('.demo-input');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.style.borderColor = 'var(--accent-teal)';
+                    this.style.boxShadow = '0 0 0 3px rgba(13, 148, 136, 0.1)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.style.borderColor = 'var(--gray-100)';
+                    this.style.boxShadow = 'none';
+                });
+            });
+
+            // Enter key support for demos
+            document.getElementById('agentInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    simulateAgent();
+                }
+            });
+
+            document.getElementById('BrainAPIInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    simulateBrainAPI();
+                }
+            });
+
+            // Add smooth scrolling for internal links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({
+                            behavior: 'smooth',
+                            block: 'start'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+
