@@ -1261,9 +1261,8 @@
                 <div class="code-block" data-lang="bash">
                     <span class="keyword">export</span> <span class="string">VERSION=0.6.0</span><br>
                     <span class="function">docker</span> pull us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:$VERSION<br>
-                    <span class="function">docker</span> run -d -p 8080:8080 -v $(pwd)/tools.json:/tools.json --name BrainAPI-mcp us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:$VERSION --tools-file=/tools.json
+                    <span class="function">docker</span> docker run -d -p 5001:5000 --platform linux/amd64 -v "$(pwd)/tools.yaml:/tools.yaml" us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:0.6.0 toolbox --tools-file /tools.yaml --address 0.0.0.0               
                 </div>
-
                 <h3> 5️⃣ Verificação do MCP Toolbox</h3>
                 <div class="code-block" data-lang="bash">
                     # Instalar e executar MCP Inspector<br>

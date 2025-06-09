@@ -187,11 +187,11 @@ export VERSION=0.6.0
 docker pull us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:$VERSION
 
 # Executar container
-docker run -d -p 8080:8080 \
-  -v $(pwd)/tools.json:/tools.json \
-  --name BrainAPI-mcp \
-  us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:$VERSION \
-  --tools-file=/tools.json
+docker run -d -p 5001:5000 \
+  --platform linux/amd64 \
+  -v "$(pwd)/tools.yaml:/tools.yaml" \
+  us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:0.6.0 \
+  toolbox --tools-file /tools.yaml --address 0.0.0.0
 ```
 
 ### 5️⃣ Verificação do MCP Toolbox
@@ -204,7 +204,7 @@ npx @modelcontextprotocol/inspector
 - Abra: http://127.0.0.1:6274
 - Configure:
   - **Transport type**: SSE
-  - **URL**: http://127.0.0.1:8080/mcp/sse
+  - **URL**: http://127.0.0.1:5001/mcp/sse
 - Clique em "Connect" e depois "List Tools"
 
 ### 6️⃣ Execução do ADK Agent

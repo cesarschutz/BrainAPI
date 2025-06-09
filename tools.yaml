@@ -1,0 +1,26 @@
+sources:
+    my-http-source:
+        kind: http
+        baseUrl: http://host.docker.internal:3000
+
+tools:
+    get-card:
+        kind: http
+        source: my-http-source
+        method: GET
+        path: /cards
+        description: Ferramenta para consultar o cartão
+
+    get-card-by-uuid:
+        kind: http
+        source: my-http-source
+        method: GET
+        path: /cards/{{.uuid}}
+        description: Ferramenta para consultar um cartão pelo seu UUID
+
+    block-card-by-uuid:
+        kind: http
+        source: my-http-source
+        method: POST
+        path: /cards/{{.uuid}}/block
+        description: Ferramenta para cancelar cartão recebendo o UUID do cartão
