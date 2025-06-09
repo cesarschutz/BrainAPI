@@ -586,6 +586,53 @@
             margin-bottom: 1.5rem;
             font-style: italic;
         }
+
+        .component-box {
+            background: #f4f4f4;
+            border-left: 4px solid #2b6777;
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-top: 1rem;
+        }
+
+        .tag {
+            display: inline-block;
+            background: #2b6777;
+            color: #fff;
+            padding: 2px 8px;
+            font-size: 0.75rem;
+            border-radius: 6px;
+            margin-left: 0.5rem;
+        }
+
+        .highlight {
+            font-weight: bold;
+            color: #1d4e89;
+        }
+
+        ul {
+      list-style: none;
+      padding-left: 0;
+    }
+
+    li {
+      margin: 0.8rem 0;
+      padding-left: 2rem;
+      position: relative;
+    }
+
+    li::before {
+      content: '✨';
+      position: absolute;
+      left: 0;
+    }
+
+    .flow li::before { content: '🔄'; }
+    .flow li:nth-child(2)::before { content: '📝'; }
+    .flow li:nth-child(3)::before { content: '⚙️'; }
+    .flow li:nth-child(4)::before { content: '🚀'; }
+    .flow li:nth-child(5)::before { content: '🧠'; }
+    .flow li:nth-child(6)::before { content: '💬'; }
         
         /* Responsive */
         @media (max-width: 1024px) {
@@ -1029,18 +1076,42 @@
         <!-- Visão Geral -->
         <section id="overview" class="section">
             <div class="section-header">
-                <h2 class="section-title">Visão Geral</h2>
+                <h2 class="section-title">🎯 Visão Geral</h2>
                 <p class="section-subtitle">Transforme especificações de API em respostas inteligentes com IA conversacional.</p>
             </div>
             <div class="card">
-                <h3>🎯 O que é o BrainAPI?</h3>
-                <p>O <strong>BrainAPI</strong> é um sistema que combina Inteligência Artificial conversacional com APIs REST, permitindo que usuários interajam com APIs utilizando linguagem natural. Ao invés de fazer chamadas HTTP manuais, você pode simplesmente perguntar e o sistema entende, identifica a API correta, executa a chamada e retorna a resposta em linguagem natural.</p>
+                <p>
+                O <strong>BrainAPI</strong> é um sistema que combina Inteligência Artificial conversacional com APIs REST, permitindo que usuários interajam com APIs utilizando linguagem natural.
+                </p>
+                <p>
+                Ao invés de fazer chamadas HTTP manuais (<code>curl</code>, <code>Postman</code>, etc), você pode simplesmente perguntar:
+                </p>
+                <div class="code-example">
+                "Qual o status do cartão com UUID b4ff0172-3a01-4aca-96f0-72247c5ba34c?"
+                </div><br>
+                <p>E o sistema automaticamente:</p>
+                <ul>
+                <li>🧠 Entende sua intenção usando IA</li>
+                <li>🔍 Identifica qual API chamar</li>
+                <li>⚙️ Executa a chamada HTTP apropriada</li>
+                <li>💬 Retorna a resposta em linguagem natural</li><br>
+                </ul>
+
+                <h2>🌟 Principais Características</h2><br>
+                <ul>
+                <li>🗣️ Interface Natural: Converse com APIs usando linguagem humana</li>
+                <li>🔄 Conversão Automática: OpenAPI → Ferramentas MCP automaticamente</li>
+                <li>🤖 IA Avançada: Powered by Google Gemini via ADK (ou outra LLM, até local!)</li>
+                <li>🐳 Containerizado: Deploy fácil com Docker</li>
+                <li>🌐 Interface Web: WebServer integrado para interação</li>
+                <li>🔧 Extensível: Adicione novas APIs facilmente</li>
+                </ul>
                 
                 <div class="badge-container">
                     <span class="badge badge-java">Java 17+</span>
                     <span class="badge badge-spring">Spring Boot</span>
                     <span class="badge badge-adk">Google ADK</span>
-                    <span class="badge badge-mcp">MCP Compatible</span>
+                    <span class="badge badge-mcp">MCP Toolbox</span>
                     <span class="badge badge-node">Node.js</span>
                     <span class="badge badge-docker">Docker Ready</span>
                     <span class="badge badge-openapi">OpenAPI 3.1</span>
@@ -1051,43 +1122,62 @@
         <!-- Arquitetura -->
         <section id="architecture" class="section">
             <div class="section-header">
-                <h2 class="section-title">Arquitetura</h2>
+                <h2 class="section-title">🏗️ Arquitetura</h2>
                 <p class="section-subtitle">Entenda como os componentes do BrainAPI se conectam.</p>
             </div>
             <div class="card">
-                <h3>🔄 Fluxo de Funcionamento</h3>
-                <div class="mermaid-diagram">
-flowchart LR
-    Usuario["👤 Usuário"] --> AgentADK["🧠 BrainAPI Agent"]
-    
-    subgraph "Geração de Ferramentas (Offline)"
-        direction LR
-        OpenAPI["📄 openAPI.json"] --> Gerador["⚙️ openapi2mcp"]
-        Gerador --> Tool["📦 tools.json"]
-    end
-    
-    subgraph "Execução (Online)"
-        direction LR
-        AgentADK --> LLM["🤖 LLM (Gemini)"]
-        LLM --> MCPToolbox["🔧 MCP Toolbox"]
-        Tool --> MCPToolbox
-        MCPToolbox --> API["🔌 API Externa"]
-    end
+                <div style="text-align: center;">
+                    <img src="arquitetura.png" alt="BrainAPI">
                 </div>
-                 <ol>
-                    <li><strong>Especificação</strong>: As APIs são documentadas em formato OpenAPI.</li>
-                    <li><strong>Geração</strong>: A ferramenta `openapi2mcp-toolbox` converte os endpoints em ferramentas MCP (`tools.json`).</li>
-                    <li><strong>Hospedagem</strong>: O MCP Toolbox (em um container Docker) serve as ferramentas via protocolo MCP.</li>
-                    <li><strong>Processamento</strong>: O ADK Agent recebe a pergunta do usuário, usa o LLM para interpretá-la e chama a ferramenta apropriada através do MCP Toolbox.</li>
-                    <li><strong>Resposta</strong>: O resultado da chamada da API é formatado em linguagem natural e devolvido ao usuário.</li>
-                </ol>
-            </div>
+                <h1>🧩 Componentes do BrainAPI</h1>
+                <p>O <strong>BrainAPI</strong> é composto por três componentes principais que trabalham juntos:</p>
+                <ul>
+                <li>🛠️ <strong>Geração de Tool</strong></li>
+                <li>🤖 <strong>Agente</strong></li>
+                <li>🧰 <strong>MCP Toolbox</strong></li>
+                </ul>   
+                
+                <h2>🔄 Fluxo de Funcionamento</h2>
+                <ul class="flow">
+                    <li>Especificação: APIs são documentadas em formato OpenAPI</li>
+                    <li>Geração: <code>openapi2mcp-toolbox</code> converte endpoints em ferramentas MCP</li>
+                    <li>Hospedagem: MCP Toolbox serve as ferramentas via protocolo MCP</li>
+                    <li>Processamento: ADK Agent processa linguagem natural e chama ferramentas</li>
+                    <li>Resposta: Resultado é formatado em linguagem natural para o usuário</li>
+                </ul>
+
+                <h2>🧩 Componentes Detalhados</h2>
+
+                <div class="component-box">
+                    <h3>1. OpenAPI → MCP Generator <span class="tag">openapi2mcp-toolbox</span></h3>
+                    <p><span class="highlight">Função:</span> Converte especificações OpenAPI em ferramentas MCP</p>
+                    <p><span class="highlight">Input:</span> <code>openapi.yaml</code> com definições de APIs</p>
+                    <p><span class="highlight">Output:</span> <code>tools.json</code> com ferramentas prontas para uso</p>
+                    <p><span class="highlight">Tecnologia:</span> Java + Maven</p>
+                </div>
+
+                <div class="component-box">
+                    <h3>2. MCP Toolbox <span class="tag">Docker</span></h3>
+                    <p><span class="highlight">Função:</span> Hospeda ferramentas via Model Context Protocol</p>
+                    <p><span class="highlight">Protocolo:</span> MCP (da Anthropic)</p>
+                    <p><span class="highlight">Interface:</span> HTTP + Server-Sent Events (SSE)</p>
+                    <p><span class="highlight">Tecnologia:</span> Docker container</p>
+                </div>
+
+                <div class="component-box">
+                    <h3>3. ADK Agent <span class="tag">Java + WebServer</span></h3>
+                    <p><span class="highlight">Função:</span> Interface de IA conversacional</p>
+                    <p><span class="highlight">Framework:</span> Google Agent Development Kit (ADK)</p>
+                    <p><span class="highlight">LLM:</span> Google Gemini 2.0 Flash (ou outro, inclusive local)</p>
+                    <p><span class="highlight">Interface:</span> Web UI integrada</p>
+                </div> 
+    
         </section>
         
         <!-- Pré-requisitos -->
         <section id="prerequisites" class="section">
             <div class="section-header">
-                <h2 class="section-title">Pré-requisitos</h2>
+                <h2 class="section-title">📋 Pré-requisitos</h2>
                 <p class="section-subtitle">Software e chaves necessárias para rodar o projeto.</p>
             </div>
             <div class="card">
@@ -1110,46 +1200,90 @@ flowchart LR
                 </table>
                 <h3>🔑 Chaves de API</h3>
                 <p>É necessária uma <strong>Google AI Studio API Key</strong> para o ADK Agent. Você pode obtê-la em <a href="https://aistudio.google.com/" target="_blank">Google AI Studio</a> e configurá-la como uma variável de ambiente chamada `GOOGLE_API_KEY`.</p>
+
+                <h3>🔍 Verificação do Ambiente</h3>
+                <p>Execute os comandos abaixo para verificar se tudo está instalado:</p>
+                
+                <div class="code-block" data-lang="bash">
+                    # Verificar Java<br>
+                    <span class="function">java</span> -version<br><br>
+
+                    # Verificar Maven<br>
+                    <span class="function">mvn</span> -version<br><br>
+
+                    # Verificar Docker<br>
+                    <span class="function">docker</span> --version<br><br>
+
+                    # Verificar Node.js<br>
+                    <span class="function">node</span> --version<br><br>
+
+                    # Verificar Git<br>
+                    <span class="function">git</span> --version
+                </div>
             </div>
         </section>
 
         <!-- Instalação e Configuração -->
         <section id="setup" class="section">
             <div class="section-header">
-                <h2 class="section-title">Instalação e Configuração</h2>
+                <h2 class="section-title">🚀 Instalação e Configuração</h2>
                 <p class="section-subtitle">Passo a passo para colocar o BrainAPI para funcionar.</p>
             </div>
              <div class="card">
                 <h3>1️⃣ Clone o Repositório e Configure a API Key</h3>
                 <div class="code-block" data-lang="bash">
-<span class="function">git</span> clone https://github.com/cesarschutz/BrainAPI.git
-<span class="function">cd</span> BrainAPI
-<span class="keyword">export</span> <span class="string">GOOGLE_API_KEY="sua-chave-aqui"</span>
+                    <span class="function">git</span> clone https://github.com/cesarschutz/BrainAPI.git<br>
+                    <span class="function">cd</span> BrainAPI<br>
+                    <span class="keyword">export</span> <span class="string">GOOGLE_API_KEY="sua-chave-aqui"</span>
                 </div>
-                <h3>2️⃣ Gere as Ferramentas MCP</h3>
+                <h3>2️⃣ Configure a API Key</h3>
                 <div class="code-block" data-lang="bash">
-<span class="comment"># Navegue para o gerador e compile</span>
-<span class="function">cd</span> openapi2mcp-toolbox
-<span class="function">mvn</span> clean package
+                    # Linux/macOS<br>
+                    <span class="function">export</span> GOOGLE_API_KEY=<span class="string">"sua-chave-do-google-ai-studio"</span><br><br>
 
-<span class="comment"># Gere o arquivo tools.json na raiz do projeto</span>
-<span class="function">java</span> -jar target/openapi-mcp-1.0-jar-with-dependencies.jar > ../tools.json
-<span class="function">cd</span> ..
-                </div>
-                <h3>3️⃣ Inicie o MCP Toolbox com Docker</h3>
-                <div class="code-block" data-lang="bash">
-<span class="keyword">export</span> <span class="string">VERSION=0.6.0</span>
-<span class="function">docker</span> pull us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:$VERSION
-<span class="function">docker</span> run -d -p 8080:8080 -v $(pwd)/tools.json:/tools.json --name BrainAPI-mcp us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:$VERSION --tools-file=/tools.json
-                </div>
-                 <h3>4️⃣ Execute o ADK Agent</h3>
-                <div class="code-block" data-lang="bash">
-<span class="comment"># Navegue para o agente</span>
-<span class="function">cd</span> BrainAPI-agent
+                    # Windows (PowerShell)<br>
+                    $env:GOOGLE_API_KEY=<span class="string">"sua-chave-do-google-ai-studio"</span><br><br>
 
-<span class="comment"># Execute com o WebServer na porta 8081</span>
-<span class="function">mvn</span> compile exec:java "-Dexec.args=--server.port=8081"
+                    # Windows (CMD)<br>
+                    <span class="function">set</span> GOOGLE_API_KEY=sua-chave-do-google-ai-studio
                 </div>
+                <h3>3️⃣ Gere as Ferramentas MCP</h3>
+                <div class="code-block" data-lang="bash">
+                    <span class="comment"># Navegue para o gerador e compile</span><br>
+                    <span class="function">cd</span> openapi2mcp-toolbox<br>
+                    <span class="function">mvn</span> clean package<br><br>
+
+                    <span class="comment"># Gere o arquivo tools.json na raiz do projeto</span><br>
+                    <span class="function">java</span> -jar target/openapi-mcp-1.0-jar-with-dependencies.jar > ../tools.json<br>
+                    <span class="function">cd</span> ..
+                </div>
+                <h3>4️⃣ Inicie o MCP Toolbox com Docker</h3>
+                <div class="code-block" data-lang="bash">
+                    <span class="keyword">export</span> <span class="string">VERSION=0.6.0</span><br>
+                    <span class="function">docker</span> pull us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:$VERSION<br>
+                    <span class="function">docker</span> run -d -p 8080:8080 -v $(pwd)/tools.json:/tools.json --name BrainAPI-mcp us-central1-docker.pkg.dev/database-toolbox/toolbox/toolbox:$VERSION --tools-file=/tools.json
+                </div>
+
+                <h3> 5️⃣ Verificação do MCP Toolbox</h3>
+                <div class="code-block" data-lang="bash">
+                    # Instalar e executar MCP Inspector<br>
+                    <span class="function">npx</span> @modelcontextprotocol/inspector
+                </div>
+                    Abra: http://127.0.0.1:6274<br>
+                    Configure:<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;Transport type: SSE<br>
+                    &nbsp;&nbsp;&nbsp;&nbsp;URL: http://127.0.0.1:8080/mcp/sse<br>
+                    Clique em "Connect" e depois "List Tools"<br><br>
+                
+
+                 <h3>6️⃣ Execute o ADK Agent</h3>
+                <div class="code-block" data-lang="bash">
+                    <span class="comment"># Navegue para o agente</span><br>
+                    <span class="function">cd</span> BrainAPI-agent<br><br>
+
+                    <span class="comment"># Execute com o WebServer na porta 8081</span><br>
+                    <span class="function">mvn</span> compile exec:java "-Dexec.args=--server.port=8081"
+                </div><br>
                 <p>Após esses passos, a interface web estará acessível em <a href="http://localhost:8081" target="_blank">http://localhost:8081</a>.</p>
             </div>
         </section>
@@ -1157,17 +1291,35 @@ flowchart LR
         <!-- Como Usar -->
         <section id="usage" class="section">
             <div class="section-header">
-                <h2 class="section-title">Como Usar</h2>
+                <h2 class="section-title">💡 Como Usar</h2>
                 <p class="section-subtitle">Exemplos práticos de interação com o BrainAPI.</p>
             </div>
             <div class="card">
-                <h3>💬 Exemplos de Comandos</h3>
-                <p>Acesse a interface web e experimente perguntas como:</p>
+                <h3>🎯 Interface Web</h3>
+                <div class="step"><strong>Acesse:</strong> <a href="http://localhost:8081">http://localhost:8081</a></div>
+                <div class="step"><strong>Digite:</strong> Sua pergunta em linguagem natural</div>
+                <div class="step"><strong>Aguarde:</strong> O processamento da IA</div>
+                <div class="step"><strong>Receba:</strong> Resposta formatada</div><br>
+
+                <h3>📝 Exemplos de Comandos</h3>
+                <div class="example">
+                <div class="user">👤 Usuário: "Consulte o cartão com UUID <code>b4ff0172-3a01-4aca-96f0-72247c5ba34c</code>"</div>
+                <div class="bot">🤖 BrainAPI: Consultando cartão...</div>
+                <div class="bot">📊 Resultado: Cartão ativo, limite R$ 5.000, disponível R$ 3.750</div>
+                </div>
+
+                <div class="example">
+                <div class="user">👤 Usuário: "Qual o status do meu cartão?"</div>
+                <div class="bot">🤖 BrainAPI: Para consultar seu cartão, preciso do UUID. Você pode fornecer?</div><br>
+                </div>
+
+                <h3>🔧 Comandos Avançados</h3>
+                <p>O BrainAPI entende diversos tipos de solicitações:</p>
                 <ul>
-                    <li>"Consulte o cartão com UUID b4ff0172-3a01-4aca-96f0-72247c5ba34c"</li>
-                    <li>"Qual o status do meu cartão?" (O sistema pedirá o UUID se não for fornecido)</li>
-                    <li>"Liste os cartões do cliente com uuid eb58556d-e468-49fe-b3b8-02220e878897"</li>
-                    <li>"Bloqueie o cartão b4ff0172-3a01-4aca-96f0-72247c5ba34c"</li>
+                    <li><strong>Consultas:</strong> "Mostre informações do cartão com uuid <code>b4ff0172-3a01-4aca-96f0-72247c5ba34c</code>"</li>
+                    <li><strong>Filtros:</strong> "Liste cartões do customer uuid <code>eb58556d-e468-49fe-b3b8-02220e878897</code>"</li>
+                    <li><strong>Operações:</strong> "Bloqueie o cartão <code>b4ff0172-3a01-4aca-96f0-72247c5ba34c</code>"</li>
+                    <li><strong>Relatórios:</strong> "Gere relatório de transações do mês do cartão <code>b4ff0172-3a01-4aca-96f0-72247c5ba34c</code>"</li>
                 </ul>
             </div>
         </section>
@@ -1175,7 +1327,7 @@ flowchart LR
         <!-- Tecnologias -->
         <section id="tech" class="section">
             <div class="section-header">
-                <h2 class="section-title">Tecnologias</h2>
+                <h2 class="section-title">🛠️ Tecnologias</h2>
                 <p class="section-subtitle">Frameworks, protocolos e ferramentas que movem o BrainAPI.</p>
             </div>
             <div class="card">
